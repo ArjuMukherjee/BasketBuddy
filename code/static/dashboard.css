@@ -1,0 +1,68 @@
+body{
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+body::-webkit-scrollbar{
+    display: none;
+}
+#header {
+    background-color:darkgreen;
+    height: 50px;
+    vertical-align: middle;
+}
+.tag{
+    background-color: transparent;
+    border: transparent;
+    translate: 0px 13px;
+    color: white;
+}
+.tag:hover{
+    text-shadow: 1px 1px 5px whitesmoke;
+    translate: 1px 12px;
+}
+.t {
+    font-family: 'Verdana';
+    color: white;
+}
+.link {
+    translate: 0px -20px;
+    background: none;
+    border: none;
+    color: white;
+}
+.image:hover{
+    translate: 0px -1px;
+}
+#Signout{
+    text-align: right;
+    translate: 0px 0px;
+}
+.Dashboard{
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+    background: None;
+}
+h3{
+    font-family: 'Impact';
+    translate: 20px 0px;
+    text-align: left;
+}
+.ttt{
+    box-shadow: 1px 1px 5px darkgreen;
+    border-radius: 5px;
+    border: black;
+    translate: 0px 13px;
+    color: white;
+    background: darkgreen;
+}
+.ttt:hover{
+    text-shadow: 1px 1px 5px whitesmoke;
+    translate: 1px 12px;
+}

@@ -1,0 +1,105 @@
+body{
+    background: white;
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: auto;
+    padding: 0;
+}
+body::-webkit-scrollbar{
+    display: None;
+}
+.category{
+    translate: 0px 10px;
+    background-color: None;
+    padding: 10px 10px 10px 10px;
+    max-height: 170px;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+}
+.category::-webkit-scrollbar {
+    height: 4px;
+}
+.category::-webkit-scrollbar-track {
+    background: white;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.category::-webkit-scrollbar-thumb {
+    background: white;
+    border-radius: 100vw;
+}
+.category::-webkit-scrollbar-thumb:hover {
+    background: grey;
+}
+.items{
+    min-width: 150px;
+    height: 155px;
+    background-color: white;
+    text-align: center;
+    box-shadow: 1px 1px 5px black;
+}
+#header {
+    background-color:darkgreen;
+    height: 50px;
+    vertical-align: middle;
+}
+.tag{
+    background-color: transparent;
+    border: transparent;
+    translate: 0px 13px;
+    color: white;
+}
+.tag:hover{
+    text-shadow: 1px 1px 5px whitesmoke;
+    translate: 1px 12px;
+}
+.t {
+    font-family: 'Verdana';
+    color: white;
+}
+.link {
+    translate: 0px -20px;
+    background: none;
+    border: none;
+    color: white;
+}
+.image:hover{
+    translate: 0px -1px;
+}
+#Signout{
+    text-align: right;
+    translate: 0px 0px;
+}
+#catid{
+    padding-top: 10px;
+    translate: 0px 10px;
+    text-align: left;
+    color: darkgreen;
+    text-shadow: 1px 1px 1px darkgreen;
+}
+.ttt{
+    box-shadow: 1px 1px 5px black;
+    border-radius: 5px;
+    border: black;
+    translate: 0px 13px;
+    color: white;
+}
+.ttt:hover{
+    text-shadow: 1px 1px 5px whitesmoke;
+    translate: 1px 12px;
+}
+.searchcategory{
+    gap: 10px;
+}
+.searchitems{
+    min-width: 150px;
+    max-width: 150px;
+    height: 155px;
+    background-color: white;
+    text-align: center;
+    box-shadow: 1px 1px 5px black;
+}

@@ -1,0 +1,1617 @@
+openapi: 3.0.0
+info:
+  description: "This is a sample Grocery Store Api server"
+  version: "1.0.0"
+  title: "Grocery Store"
+  contact:
+    email: "arju234567@email.com"
+tags:
+  - name: "Portal"
+    description: "Helps the user to Login, Register and Logout into the application"
+  - name: "Manager"
+    description: "Helps to manage, edit and control managers"
+  - name: "Product"
+    description: "Shows and allows to access the products in the store"
+  - name: "Categories"
+    description: "Gives the categories and helps to access them"
+  - name: "Cart"
+    description: "Gives the user cart"
+  - name: "Downloads"
+    description: "Downloads the required resources"
+servers:
+  - url: http://127.0.0.1:5000
+paths:
+  /user-login:
+    description: "Provides you the authentication code after passing the credentials"
+    post:
+      tags:
+        - "Portal"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: demo@email.com
+                password:
+                  type: string
+                  example: Password@123
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "WyIzYTY5ZTZkMDg0NTB0ZWM1OTJiMzA4YTByMTgxZjdfZCJd.ZX6YJw.cfW6y-_-t9n3uGBV5VqFc3NFak8"
+                  email:
+                    type: string
+                    example: demo@email.com
+                  role:
+                    type: string
+                    example: Role
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '401':
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '404':
+          description: "Not Found Error"
+          content:
+            application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Error message
+  /user-register:
+    description: "Adds a new user to the database"
+    post:
+      tags:
+        - "Portal"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: demo@email.com
+                password:
+                  type: string
+                  example: "Password@123"
+                f_name:
+                  type: string
+                  example: First
+                m_name:
+                  type: string
+                  example: Middle
+                l_name:
+                  type: string
+                  example: Last
+                username:
+                  type: string
+                  example: User_123
+                address:
+                  type: string
+                  example: "NIELIT campus, Dr babasaheb ambedkar marathwada university campus, 431004"
+                phno:
+                  type: integer
+                  example: 9330131472
+                role:
+                  type: string
+                  example:
+                    - manager
+                    - customer
+                pin:
+                  type: integer
+                  example: 431004
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: demo@email.com
+                  role:
+                    type: string
+                    example: customer
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '401':
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '409':
+          description: "Conflict!"
+          content:
+            application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Error message
+  /log-out:
+    description: "Logs the user out of the application"
+    post:
+      tags:
+        - "Portal"
+      security:
+        - customerauth: []
+        - managerauth: []
+        - adminauth: []
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+  /managers:
+    description: "Returns all the managers"
+    get:
+      tags:
+        - "Manager"
+      security:
+        - adminauth: []
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 10
+                  email:
+                    type: string
+                    example: demo@email.com
+                  active:
+                    type: boolean
+                    example: True
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error"
+          content:
+            application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Error message
+  /activate/manager/{manager_id}:
+    description: "Activates the manager provided by manager id"
+    post:
+      tags:
+        - "Manager"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: manager_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /deactivate/manager/{manager_id}:
+    description: "Deactivates the manager provided by manager id"
+    post:
+      tags:
+        - "Manager"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: manager_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /cart:
+    description: "Gives cart"
+    get:
+      tags:
+        - "Cart"
+      security:
+        - customerauth: []
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            appication/json:
+              schema:
+                title: Cart
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: Apple
+                    quantity:
+                      type: integer
+                      example: 146
+                    price:
+                      type: number
+                      example: 132.45
+                    unit:
+                      type: string
+                      example: /kg
+                example:
+                  1:
+                    name: Apple
+                    quantity: 10
+                    price: 132.45
+                    unit: /kg
+                  2:
+                    name: Grapes
+                    quantity: 10
+                    price: 123.49
+                    unit: /kg
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+  /add-to-cart:
+    description: "Adds product to cart"
+    summary: "If flag is true the quantity represents the number of products in the cart and if it is false the quantity represents the additional number of products in the cart"
+    post:
+      tags:
+        - "Cart"
+      security:
+        - customerauth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                  example: 1
+                quantity:
+                  type: integer
+                  example: 148
+                flag:
+                  type: boolean
+                  example: True
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '409':
+          description: "Inalid Input!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /buy:
+    description: "Buys the cart of the user"
+    post:
+      tags:
+        - "Cart"
+      security:
+        - customerauth: []
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '409':
+          description: "Not Available!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /remove/{product_id}/cart:
+    description: "Delete product in cart"
+    delete:
+      tags:
+        - "Cart"
+      security:
+        - customerauth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /api/products:
+    description: "End to get and create a Product"
+    get:
+      tags:
+        - "Product"
+      description: "Get the details of the products in the store"
+      security:
+        - managerauth: []
+        - adminauth: []
+        - customerauth: []
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: Products
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: Apple
+                    description:
+                      type: string
+                      example: Apples are tasty
+                    img_url:
+                      type: string
+                      example: apple.jpg
+                    quantity:
+                      type: integer
+                      example: 10
+                    mfg_date:
+                      type: object
+                      properties:
+                        year:
+                          type: integer
+                          example: 2023
+                        month:
+                          type: integer
+                          example: 4
+                        day:
+                          type: integer
+                          example: 12
+                    expiry_date:
+                      type: object
+                      properties:
+                        year:
+                          type: integer
+                          example: 2023
+                        month:
+                          type: integer
+                          example: 4
+                        day:
+                          type: integer
+                          example: 22
+                    price:
+                      type: number
+                      example: 120.5
+                    unit:
+                      type: string
+                      example: /kg
+                    category:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Fruits
+                        active:
+                          type: boolean
+                          example: True
+                    active:
+                      type: boolean
+                      example: True
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+    post:
+      tags:
+        - "Product"
+      description: "Create new product in the store"
+      security:
+        - managerauth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Grapes
+                description:
+                  type: string
+                  example: Grapes are a juicy, delicious snack that can provide you with a variety of health benefits
+                img_url:
+                  type: string
+                  example: grapes.jpg
+                mfg_date:
+                  type: string
+                  example: 2023-12-15                    
+                expiry_date:
+                  type: string
+                  example: 2023-12-26 
+                quantity:
+                  type: integer
+                  example: 152
+                unit:
+                  type: string
+                  example: /kg
+                price:
+                  type: number
+                  example: 100.25
+                category_name:
+                  type: string
+                  example: Fruits
+      responses:
+        '200':
+          description: "Returns the products details after creating the product"
+          content:
+            application/json:
+              schema:
+                title: Product
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: Apple
+                  description:
+                    type: string
+                    example: Apples are tasty
+                  img_url:
+                    type: string
+                    example: apple.jpg
+                  quantity:
+                    type: integer
+                    example: 10
+                  mfg_date:
+                    type: object
+                    properties:
+                      year:
+                        type: integer
+                        example: 2023
+                      month:
+                        type: integer
+                        example: 4
+                      day:
+                        type: integer
+                        example: 12
+                  expiry_date:
+                    type: object
+                    properties:
+                      year:
+                        type: integer
+                        example: 2023
+                      month:
+                        type: integer
+                        example: 4
+                      day:
+                        type: integer
+                        example: 22
+                  price:
+                    type: number
+                    example: 120.5
+                  unit:
+                      type: string
+                      example: /kg
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Fruits
+                      active:
+                        type: boolean
+                        example: True
+                  active:
+                    type: boolean
+                    example: True
+                  creator:
+                    type: string
+                    example: demo@email.com
+        '409':
+          description: "Conflict!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /activate/product/{product_id}:
+    description: "Activates the product provided by product id"
+    post:
+      tags:
+        - "Product"
+      security:
+        - managerauth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Message"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /deactivate/product/{product_id}:
+    description: "Deactivates the product provided by product id"
+    post:
+      tags:
+        - "Product"
+      security:
+        - managerauth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Message"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /api/products/{product_id}:
+    description: "End to update or delete the product"
+    put:
+      tags:
+        - "Product"
+      description: "Update product using the product id"
+      security:
+        - managerauth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Apple
+                description:
+                  type: string
+                  example: Apples are tasty
+                img_url:
+                  type: string
+                  example: apple.jpg
+                mfg_date:
+                  type: string
+                  example: 2023-12-15                    
+                expiry_date:
+                  type: string
+                  example: 2023-12-26 
+                quantity:
+                  type: integer
+                  example: 16
+                unit:
+                  type: string
+                  example: /kg
+                price:
+                  type: number
+                  example: 154.6
+      responses:
+        '200':
+          description: "Successfully Updated"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Updated Successfully!"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+    delete:
+      tags:
+        - "Product"
+      description: "Delete product using product id"
+      security:
+        - managerauth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request successful"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deleted Successfully!"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /products/manager:
+    description: "Returns products created by the manager"
+    get:
+      tags:
+        - "Product"
+      security:
+        - managerauth: []
+      responses:
+        '200':
+          description: "Request Successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 10
+                  name:
+                    type: string
+                    example: Apple
+                  expiry_date:
+                    type: object
+                    properties:
+                      year:
+                        type: integer
+                        example: 2023
+                      month:
+                        type: integer
+                        example: 12
+                      day:
+                        type: integer
+                        example: 10
+                  active:
+                    type: boolean
+                    example: True
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /product/details/{product_id}:
+    description: "Returns the product details using the product id"
+    get:
+      tags:
+        - "Product"
+      security:
+        - customerauth: []
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Apple
+                  description:
+                    type: string
+                    example: Apples are tasty
+                  img_url:
+                    type: string
+                    example: apple.jpg
+                  mfg_date:
+                    type: string
+                    example: 2023-12-5
+                  quantity:
+                    type: integer
+                    example: 427
+                  expiry_date:
+                    type: string
+                    example: 2023-12-23
+                  price:
+                    type: number
+                    example: 153.4
+                  unit:
+                    type: string
+                    example: /kg
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /deactivate-expired-products:
+    description: "Deacivates all expired products"
+    post:
+      tags:
+        - "Product"
+      security:
+        - managerauth: []
+      responses:
+        '200':
+          description: "Request successful"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Message"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /api/categories:
+    description: "End to get and create a Category"
+    get:
+      tags:
+        - "Categories"
+      description: "Get the name of the Categories in the store"
+      security:
+        - managerauth: []
+        - adminauth: []
+        - customerauth: []
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Vegetables
+                  id:
+                    type: integer
+                    example: 10
+                  active:
+                    type: boolean
+                    example: True
+                  creator:
+                    type: string
+                    example: demo@email.com
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+    post:
+      tags:
+        - "Categories"
+      description: "Create a new category"
+      security:
+        - managerauth: []
+        - adminauth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_name:
+                  type: string
+                  example: Fruits and Vegetables
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Vegetables
+                  id:
+                    type: integer
+                    example: 10
+                  active:
+                    type: boolean
+                    example: True
+                  creator:
+                    type: string
+                    example: demo@email.com
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '409':
+          description: "Conflict!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /category/name/{category_id}:
+    description: "Returns category name"
+    get:
+      tags:
+        - "Categories"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Fruits
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /api/categories/{category_id}:
+    description: "End to update or delete the category"
+    put:
+      tags:
+        - "Categories"
+      description: "Updates the category name"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category_name:
+                  type: string
+                  example: Fruits and Vegetables
+      responses:
+        '200':
+          description: "Successfully Updated"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Updated Successfully!"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found!"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+    delete:
+      tags:
+        - "Categories"
+      description: "Delete product using category id"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Successfully Updated"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Deleted Successfully!"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error message"
+  /activate/category/{category_id}:
+    description: "Activates the category using category id"
+    post:
+      tags:
+        - "Categories"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /deactivate/category/{category_id}:
+    description: "Deactivates the category using category id"
+    post:
+      tags:
+        - "Categories"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                title: Message
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Not Found Error!"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error message
+        '500':
+          description: "Internal Error"
+          content:
+            application/json:
+              schema:
+                title: Error
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error Message!"
+  /download/product-details/{category_id}:
+    description: "Downloads the products in the given categories in the server"
+    get:
+      tags:
+        - "Downloads"
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 10
+      security:
+        - managerauth: []
+      responses:
+        '200':
+          description: "Request Successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                    example: 9adcc08b-9882-4fe8-9eb7-a875041e31f2
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+  /get-product-details-csv/{task_id}:
+    description: "Get the downloaded file"
+    get:
+      tags:
+        - "Downloads"
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: string
+            example: 9adcc08b-9882-4fe8-9eb7-a875041e31f2
+      security:
+        - managerauth: []
+      responses:
+        '200':
+          description: "Request successful"
+          content:
+            text/csv:
+              schema:
+                type: string
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Pending Task"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+  /download/store-details:
+    description: "Downloads the store details"
+    get:
+      tags:
+        - "Downloads"
+      security:
+        - adminauth: []
+      responses:
+        '200':
+          description: "Request successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: string
+                    example: 9adcc08b-9882-4fe8-9eb7-a875041e31f2
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+  /get-store-details-csv/{task_id}:
+    description: "Get the downloaded file"
+    get:
+      tags:
+        - "Downloads"
+      security:
+        - adminauth: []
+      parameters:
+        - in: path
+          name: task_id
+          required: true
+          schema:
+            type: string
+            example: 9adcc08b-9882-4fe8-9eb7-a875041e31f2
+      responses:
+        '200':
+          description: "Request successful"
+          content:
+            text/csv:
+              schema:
+                type: string
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+        '404':
+          description: "Pending Task"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Message
+components:
+  responses:
+    UnauthorizedError:
+      description: API key is missing or invalid
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+  securitySchemes:
+    managerauth:
+      type: apiKey
+      in: header
+      name: Authentication-Token
+    adminauth:
+      type: apiKey
+      in: header
+      name: Authentication-Token
+    customerauth:
+      type: apiKey
+      in: header
+      name: Authentication-Token
